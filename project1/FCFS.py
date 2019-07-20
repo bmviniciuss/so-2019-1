@@ -9,10 +9,8 @@ class FCFS:
         self.timer = 0
 
     def get_processes(self):
-
         processes_copy = self.processes.copy()
         filtered = list(filter(lambda p: self.timer >= p.t_arrival, processes_copy))
-
         self.processes = [p for p in self.processes if p not in filtered]
 
         return filtered
@@ -50,22 +48,17 @@ class FCFS:
                     if self.timer >= self.ready_queue[0].t_arrival: # process already arrive
                         self.cpu_active = True # make cpu active
                         p = self.ready_queue.pop(0) # pop process first process from ready_queue
-                        p.active = True # makes process's active flag true
-                        p.t_entry = self.timer # save the time that the process starts working
-                        
+                        p.start_process(self.timer) # Starts process
+
                         # do some cpu work
                         while p.t_active < p.cpu_peak:
                             self.timer += 1 # incremet the timer
-                            p.t_active += 1 # increment process's active timer 
+                            p.run() # run single interation of process
                             self.increment_waiting_time() # icrement waiting process in ready_queue
 
-                        p.active = False # process has been finished
-                        p.done = True # makes process done flag true
-                        p.t_done = self.timer # save the time of doness
+                        p.finish_process(self.timer) # finish process
                         self.cpu_active = False # cpu is not working at the time
                         self.done.append(p) # append finished process to the done list
-                        self.timer += 1
-                        self.increment_waiting_time() # icrement waiting process in ready_queue
 
                 else: # cpu has a process
                     # self.timer += 1 # increment timer until has a process

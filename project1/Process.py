@@ -9,6 +9,18 @@ class Process:
         self.t_entry = None
         self.done = False
         self.t_done = None
+    
+    def start_process(self, time):
+        self.active = True
+        self.t_entry = time
+
+    def finish_process(self, time):
+        self.active = False
+        self.done = True
+        self.t_done = time
+
+    def run(self):
+        self.t_active += 1
 
     def __str__(self):
         string =  "## Process {}\n".format(self.pid)
