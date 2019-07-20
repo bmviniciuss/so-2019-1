@@ -31,7 +31,7 @@ class FCFS:
 
     def run(self):
         self.timer = 0
-        self.on = True
+        self.on = True    
         self.cpu_active = False
 
         # self.print_process(self.processes, "Original: ")
