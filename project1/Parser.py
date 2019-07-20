@@ -19,9 +19,8 @@ class Parser(object):
                 process = Process(p_counter, t_arrival, cpu_peak)
                 processes.append(process)
                 p_counter += 1 
-            print(processes)
-            return processes
             self.close_file()
+            return processes
 
     def parse_line(self, line):
         values = line.split()
