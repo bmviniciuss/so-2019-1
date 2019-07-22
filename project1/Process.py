@@ -11,16 +11,16 @@ class Process:
         self.t_done = None
     
     def start_process(self, time):
-        self.active = True
-        self.t_entry = time
+        self.active = True # makes process's active flag true
+        self.t_entry = time  # save the time that the process starts working
 
     def finish_process(self, time):
-        self.active = False
-        self.done = True
-        self.t_done = time
+        self.active = False  # process has been finished
+        self.done = True # makes process done flag true
+        self.t_done = time  # save the time of doness
 
     def run(self):
-        self.t_active += 1
+        self.t_active += 1  # increment process's active timer 
 
     def __str__(self):
         string =  "## Process {}\n".format(self.pid)
