@@ -15,8 +15,6 @@ class FCFS:
 
         return filtered
 
-    
-
     def increment_waiting_time(self):
         for p in self.ready_queue:
             if not p.active:
@@ -38,9 +36,7 @@ class FCFS:
             ps = self.get_processes()
 
             # Append process in ready queue
-            for p in ps:
-                self.ready_queue.append(p)
-
+            self.ready_queue += ps
 
             # scheduling
             if len(self.ready_queue) > 0:
@@ -51,7 +47,7 @@ class FCFS:
                         p.start_process(self.timer) # Starts process
 
                         # do some cpu work
-                        while p.t_active < p.cpu_peak:
+                        while p.is_done():
                             self.timer += 1 # incremet the timer
                             p.run() # run single interation of process
                             self.increment_waiting_time() # icrement waiting process in ready_queue
