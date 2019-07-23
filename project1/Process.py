@@ -1,4 +1,6 @@
 class Process:
+    """Class that represents a process in a system"""
+
     def __init__(self, pid, t_arrival, cpu_peak):
         self.pid = pid
         self.t_arrival = t_arrival
@@ -9,24 +11,39 @@ class Process:
         self.t_entry = None
         self.done = False
         self.t_done = None
-    
+        self.t_return = 0
+        self.t_response = 0
+        self.t_waiting = 0
+
     def start_process(self, time):
-        self.active = True # makes process's active flag true
+        """Starts a process."""
+        self.active = True  # makes process's active flag true
         self.t_entry = time  # save the time that the process starts working
 
     def finish_process(self, time):
+        """Ends a process"""
         self.active = False  # process has been finished
-        self.done = True # makes process done flag true
+        self.done = True  # makes process done flag true
         self.t_done = time  # save the time of doness
+        self.t_return = (self.t_done - self.t_arrival)
+        self.t_response = (self.t_entry - self.t_arrival)
+        self.t_waiting = (self.t_entry - self.t_arrival)
 
     def run(self):
-        self.t_active += 1  # increment process's active timer 
+        """Run the process for a single iteration."""
+        self.t_active += 1  # increment process's active timer
 
     def is_done(self):
-        return  self.t_active < self.cpu_peak
+        """Check if a process is done."""
+        return self.t_active < self.cpu_peak
+
+    def increment_t_wait(self):
+        """Increments the waiting time of a process, if not active"""
+        if not self.active:
+            self.t_wait += 1
 
     def __str__(self):
-        string =  "## Process {}\n".format(self.pid)
+        string = "## Process {}\n".format(self.pid)
         string += "Arrival: {}\n".format(self.t_arrival)
         string += "CPU Peak: {}\n".format(self.cpu_peak)
         string += "Active: {}\n".format(self.active)
@@ -35,4 +52,7 @@ class Process:
         string += "T_Waiting: {}\n".format(self.t_wait)
         string += "T_Active: {}\n".format(self.t_active)
         string += "T_Done: {}\n".format(self.t_done)
+        string += "T_RET: {}\n".format(self.t_done - self.t_arrival)
+        string += "T_RESP: {}\n".format(self.t_entry - self.t_arrival)
+        string += "T_ESP: {}\n".format(self.t_entry - self.t_arrival)
         return string
