@@ -17,5 +17,5 @@ implementados são os seguintes:
 # A fazer:
 
 - [x] FCFS: First-Come, First-Served
-- [ ] SJF: Shortest Job First
+- [x] SJF: Shortest Job First
 - [ ] RR: Round Robin (com quantum = 2)
