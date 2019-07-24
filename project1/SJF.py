@@ -1,12 +1,12 @@
-class FCFS:
-    """Implements an FCFS scheduler (First-Come, First-Served) """
+class SJF:
+    """Implements an SJF scheduler (Shortest Job First) """
 
     def __init__(self, processes):
         self.processes = processes.copy()
         self.done = []
         self.ready_queue = []
         self.cpu_active = False
-        self.on = True
+        self.on = False
         self.timer = 0
 
     def get_processes(self):
@@ -40,13 +40,19 @@ class FCFS:
         # Append processes in ready queue
         self.ready_queue += ps
 
+        def sortP(p):
+            """Sort functions that returns the cpu peak of a process"""
+            return p.cpu_peak
+
+        self.ready_queue.sort(key=sortP)
+
     def run(self):
         """Runs the FCFS algorithm"""
         self.timer = 0
         self.on = True
         self.cpu_active = False
 
-        # self.print_process(self.processes, "Original: ")
+        # self.print_process(self.processes, "SJF Original: ")
         while self.on:
             self.update_ready_queue()  # Update Ready Queue
 

@@ -7,3 +7,11 @@ def get_stats_str(type, avgs):
         str_rep += "{:.1f} ".format(avg)
 
     return str_rep + "\n"
+
+
+def verbose_mode(args):
+    verbose = ["-v", "-V", "--verbose"]
+    for v in verbose:
+        if v in args:
+            return True
+    return False

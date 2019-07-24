@@ -8,9 +8,9 @@ class Process:
         self.active = False
         self.t_active = 0
         self.t_waiting = 0
-        self.t_entry = None
+        self.t_entry = 0
         self.done = False
-        self.t_done = None
+        self.t_done = 0
         self.t_return = 0
         self.t_response = 0
 
