@@ -24,7 +24,7 @@ class FCFS:
     def increment_waiting_time(self):
         """Increments the waiting time of all processes in the Ready Queue"""
         for p in self.ready_queue:
-            p.increment_t_wait()
+            p.wait()
 
     def print_process(self, ps, message):
         """Function that print a list of processes"""
@@ -36,6 +36,13 @@ class FCFS:
         """Ticks the timer by 1 unit of time"""
         self.timer += 1
 
+    def update_ready_queue(self):
+        """Updates the ready queue with the latest processes"""
+        # Get proccess by time
+        ps = self.get_processes()
+        # Append processes in ready queue
+        self.ready_queue += ps
+
     def run(self):
         """Runs the FCFS algorithm"""
         self.timer = 0
@@ -44,11 +51,7 @@ class FCFS:
 
         # self.print_process(self.processes, "Original: ")
         while self.on:
-            # Get proccess by time
-            ps = self.get_processes()
-
-            # Append processes in ready queue
-            self.ready_queue += ps
+            self.update_ready_queue()  # Update Ready Queue
 
             # scheduling
             if len(self.ready_queue) > 0:
@@ -62,6 +65,7 @@ class FCFS:
 
                         # do some cpu work
                         while p.is_done():
+                            self.update_ready_queue()  # update ready queue
                             p.run()  # run single interation of process
                             self.tick()  # incremet the timer
                             self.increment_waiting_time()  # icrement waiting process in ready_queue
@@ -70,10 +74,10 @@ class FCFS:
                         self.cpu_active = False  # cpu is not working at the time
                         # append finished process to the done list
                         self.done.append(p)
-                        self.increment_waiting_time()
 
                 else:  # cpu has a process
                     self.tick()  # increment timer until has a process
+                    self.update_ready_queue()  # update ready queue
                     self.increment_waiting_time()  # increment waiting time
             else:
                 break
