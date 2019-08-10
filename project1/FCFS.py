@@ -58,16 +58,16 @@ class FCFS:
                         self.cpu_active = True  # make cpu active
                         # pop process first process from ready_queue
                         p = self.ready_queue.pop(0)
-                        p.start_process(self.timer)  # Starts process
+                        p.init_process(self.timer)  # Starts process
 
                         # do some cpu work
-                        while p.is_done():
+                        while not p.is_done():
                             self.update_ready_queue()  # update ready queue
                             p.run()  # run single interation of process
                             self.tick()  # incremet the timer
                             self.increment_waiting_time()  # icrement waiting process in ready_queue
 
-                        p.finish_process(self.timer)  # finish process
+                        p.end_process(self.timer)  # finish process
                         self.cpu_active = False  # cpu is not working at the time
                         # append finished process to the done list
                         self.done.append(p)

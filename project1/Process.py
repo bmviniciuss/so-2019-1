@@ -14,12 +14,18 @@ class Process:
         self.t_return = 0
         self.t_response = 0
 
-    def start_process(self, time):
+    def init_process(self, time):
         """Starts a process."""
         self.active = True  # makes process's active flag true
         self.t_entry = time  # save the time that the process starts working
 
-    def finish_process(self, time):
+    def start_process(self):
+        self.active = True
+
+    def stop_process(self):
+        self.active = False
+
+    def end_process(self, time):
         """Ends a process"""
         self.active = False  # process has been finished
         self.done = True  # makes process done flag true
@@ -33,7 +39,10 @@ class Process:
 
     def is_done(self):
         """Check if a process is done."""
-        return self.t_active < self.cpu_peak
+        return not (self.t_active < self.cpu_peak)
+
+    def remaining(self):
+        return self.cpu_peak - self.t_active
 
     def wait(self):
         """Increments the waiting time of a process, if not active"""
@@ -48,8 +57,9 @@ class Process:
         string += "Done: {}\n".format(self.done)
         string += "T_Entry: {}\n".format(self.t_entry)
         string += "T_Active: {}\n".format(self.t_active)
-        string += "T_Done: {}\n".format(self.t_done)
-        string += "T_Return: {}\n".format(self.t_done - self.t_arrival)
-        string += "T_Response: {}\n".format(self.t_entry - self.t_arrival)
-        string += "T_Waiting: {}\n".format(self.t_waiting)
+        if self.done:
+            string += "T_Done: {}\n".format(self.t_done)
+            string += "T_Return: {}\n".format(self.t_done - self.t_arrival)
+            string += "T_Response: {}\n".format(self.t_entry - self.t_arrival)
+            string += "T_Waiting: {}\n".format(self.t_waiting)
         return string

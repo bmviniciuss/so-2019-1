@@ -3,6 +3,7 @@ import copy
 from Parser import Parser
 from FCFS import FCFS
 from SJF import SJF
+from RR import RR
 from FileHandler import FileHandler
 from Utils import get_stats_str, verbose_mode
 
@@ -24,14 +25,20 @@ def main():
     sjf = SJF(sjf_processes_copy)
     sjf_stats = sjf.run()
 
-    # Done - writing results to output file
-    output.write_to_file(get_stats_str("FCFS", fcfs_stats),
-                         get_stats_str("SJF", sjf_stats))
+    # Creates a RR Scheduler
+    rr_processes_copy = copy.deepcopy(processes)
+    rr = RR(rr_processes_copy)
+    rr_stats = rr.run()
 
     # If verbose. print to terminal
     if verbose:
         print(get_stats_str("FCFS", fcfs_stats), end="")
         print(get_stats_str("SJF", sjf_stats), end="")
+        print(get_stats_str("RR", rr_stats), end="")
+
+    # Done - writing results to output file
+    output.write_to_file(get_stats_str("FCFS", fcfs_stats),
+                         get_stats_str("SJF", sjf_stats), get_stats_str("RR", rr_stats))
 
 
 if __name__ == "__main__":

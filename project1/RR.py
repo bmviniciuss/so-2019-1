@@ -1,13 +1,14 @@
-class SJF:
-    """Implements an SJF scheduler (Shortest Job First) """
+class RR:
+    """Implements a RR scheduler """
 
     def __init__(self, processes):
         self.processes = processes.copy()
         self.done = []
         self.ready_queue = []
         self.cpu_active = False
-        self.on = False
+        self.on = True
         self.timer = 0
+        self.quantum = 2
 
     def get_processes(self):
         """Get a list of processes by the time of the timer"""
@@ -15,7 +16,6 @@ class SJF:
         filtered = list(filter(lambda p: self.timer >=
                                p.t_arrival, processes_copy))
         self.processes = [p for p in self.processes if p not in filtered]
-
         return filtered
 
     def increment_waiting_time(self):
@@ -40,11 +40,14 @@ class SJF:
         # Append processes in ready queue
         self.ready_queue += ps
 
-        def sortP(p):
-            """Sort functions that returns the cpu peak of a process"""
-            return p.cpu_peak
+    def print_ready(self):
+        string = "Time: {} = [".format(self.timer)
 
-        self.ready_queue.sort(key=sortP)
+        for p in self.ready_queue:
+            string += str(p.pid) + " "
+        string += "]"
+
+        print(string)
 
     def run(self):
         """Runs the FCFS algorithm"""
@@ -52,42 +55,58 @@ class SJF:
         self.on = True
         self.cpu_active = False
 
-        # self.print_process(self.processes, "SJF Original: ")
+        # self.print_process(self.processes, "Original: ")
         while self.on:
             self.update_ready_queue()  # Update Ready Queue
+            # self.print_ready()
+            #  self.print_process(
+
+            # self.ready_queue, "TIME: {} FILA: ".format(self.timer))
 
             # scheduling
             if len(self.ready_queue) > 0:
                 if self.cpu_active == False:  # if cpu does not has a process
-                    # process already arrive
+                    # process already arrived
                     if self.timer >= self.ready_queue[0].t_arrival:
-                        self.cpu_active = True  # make cpu active
-                        # pop process first process from ready_queue
+                        self.cpu_active = True
                         p = self.ready_queue.pop(0)
-                        p.init_process(self.timer)  # Starts process
+                        if p.remaining() == p.cpu_peak:
 
-                        # do some cpu work
-                        while not p.is_done():
-                            self.update_ready_queue()  # update ready queue
-                            p.run()  # run single interation of process
-                            self.tick()  # incremet the timer
-                            self.increment_waiting_time()  # icrement waiting process in ready_queue
+                            # print("NUNCA P{}".format(p.pid))
+                            p.init_process(self.timer)
+                        else:
+                            # print("JA P{}".format(p.pid))
+                            p.start_process()
 
-                        p.end_process(self.timer)  # finish process
-                        self.cpu_active = False  # cpu is not working at the time
-                        # append finished process to the done list
-                        self.done.append(p)
+                        c = 0
+                        while c < self.quantum and not p.is_done():
+                            self.update_ready_queue()
+                            p.run()
+                            self.tick()
+                            self.increment_waiting_time()
+                            c += 1
 
+                        p.stop_process()
+                        self.cpu_active = False
+
+                        if p.is_done():
+                            p.end_process(self.timer)
+                            self.done.append(p)
+                        else:
+                            # self.tick()
+
+                            self.update_ready_queue()
+                            self.ready_queue.append(p)
                 else:  # cpu has a process
-                    self.tick()  # increment timer until has a process
                     self.update_ready_queue()  # update ready queue
-                    self.increment_waiting_time()  # increment waiting time
             else:
                 break
 
         # self.print_process(self.done, "Done: ")
         result = self.compute_stats()
+        # print(self.timer)
         return result
+        # return [1, 1, 1]
 
     def compute_stats(self):
         """Compute the scheduler's peformance stats"""
@@ -97,6 +116,7 @@ class SJF:
         sums = [0, 0, 0]
 
         for p in self.done:
+            # print(p.t_return)
             sums[0] += p.t_return
             sums[1] += p.t_response
             sums[2] += p.t_waiting
