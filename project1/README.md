@@ -18,4 +18,4 @@ implementados são os seguintes:
 
 - [x] FCFS: First-Come, First-Served
 - [x] SJF: Shortest Job First
-- [ ] RR: Round Robin (com quantum = 2)
+- [x] RR: Round Robin (com quantum = 2)
