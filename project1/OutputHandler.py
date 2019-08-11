@@ -1,7 +1,7 @@
 import os
 
 
-class FileHandler:
+class OutputHandler:
     """Class that controls the output of the program to a file"""
 
     def __init__(self, filename):

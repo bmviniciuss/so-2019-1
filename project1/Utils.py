@@ -10,6 +10,7 @@ def get_stats_str(type, avgs):
 
 
 def verbose_mode(args):
+    """Check if verbose mode is active in args, to show output on the terminal"""
     verbose = ["-v", "-V", "--verbose"]
     for v in verbose:
         if v in args:

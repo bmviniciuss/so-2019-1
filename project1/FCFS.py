@@ -46,12 +46,12 @@ class FCFS:
         self.on = True
         self.cpu_active = False
 
-        # self.print_process(self.processes, "Original: ")
+        # Starts
         while self.on:
             self.update_ready_queue()  # Update Ready Queue
 
             # scheduling
-            if len(self.ready_queue) > 0:
+            if len(self.ready_queue) > 0:  # ready_queue is not empty
                 if self.cpu_active == False:  # if cpu does not has a process
                     # process already arrive
                     if self.timer >= self.ready_queue[0].t_arrival:
@@ -60,12 +60,12 @@ class FCFS:
                         p = self.ready_queue.pop(0)
                         p.init_process(self.timer)  # Starts process
 
-                        # do some cpu work
+                        # do cpu work
                         while not p.is_done():
                             self.update_ready_queue()  # update ready queue
                             p.run()  # run single interation of process
                             self.tick()  # incremet the timer
-                            self.increment_waiting_time()  # icrement waiting process in ready_queue
+                            self.increment_waiting_time()  # increment waiting time of ready_queue's processes
 
                         p.end_process(self.timer)  # finish process
                         self.cpu_active = False  # cpu is not working at the time
@@ -79,7 +79,6 @@ class FCFS:
             else:
                 break
 
-        # self.print_process(self.done, "Done: ")
         result = self.compute_stats()
         return result
 

@@ -40,15 +40,6 @@ class RR:
         # Append processes in ready queue
         self.ready_queue += ps
 
-    def print_ready(self):
-        string = "Time: {} = [".format(self.timer)
-
-        for p in self.ready_queue:
-            string += str(p.pid) + " "
-        string += "]"
-
-        print(string)
-
     def run(self):
         """Runs the FCFS algorithm"""
         self.timer = 0
@@ -58,27 +49,26 @@ class RR:
         # self.print_process(self.processes, "Original: ")
         while self.on:
             self.update_ready_queue()  # Update Ready Queue
-            # self.print_ready()
-            #  self.print_process(
-
-            # self.ready_queue, "TIME: {} FILA: ".format(self.timer))
 
             # scheduling
             if len(self.ready_queue) > 0:
                 if self.cpu_active == False:  # if cpu does not has a process
                     # process already arrived
                     if self.timer >= self.ready_queue[0].t_arrival:
-                        self.cpu_active = True
+                        self.cpu_active = True  # makes cpu active flag true
+                        # pop first process of readty queue
                         p = self.ready_queue.pop(0)
-                        if p.remaining() == p.cpu_peak:
 
-                            # print("NUNCA P{}".format(p.pid))
+                        # check if process already went to the cpu
+                        if p.remaining() == p.cpu_peak:
+                            # process never went to the cpu
                             p.init_process(self.timer)
                         else:
-                            # print("JA P{}".format(p.pid))
+                            # process already went to the cpu
                             p.start_process()
 
-                        c = 0
+                        # do cpu work
+                        c = 0  # quantum counter
                         while c < self.quantum and not p.is_done():
                             self.update_ready_queue()
                             p.run()
@@ -86,16 +76,15 @@ class RR:
                             self.increment_waiting_time()
                             c += 1
 
-                        p.stop_process()
-                        self.cpu_active = False
+                        p.stop_process()  # stop process
+                        self.cpu_active = False  # makes cpu inactive
 
-                        if p.is_done():
-                            p.end_process(self.timer)
-                            self.done.append(p)
+                        if p.is_done():  # check if process is done
+                            p.end_process(self.timer)  # end process
+                            self.done.append(p)  # put process in the done list
                         else:
-                            # self.tick()
-
                             self.update_ready_queue()
+                            # put process back, at the end, in the ready queue
                             self.ready_queue.append(p)
                 else:  # cpu has a process
                     self.update_ready_queue()  # update ready queue
@@ -104,9 +93,7 @@ class RR:
 
         # self.print_process(self.done, "Done: ")
         result = self.compute_stats()
-        # print(self.timer)
         return result
-        # return [1, 1, 1]
 
     def compute_stats(self):
         """Compute the scheduler's peformance stats"""

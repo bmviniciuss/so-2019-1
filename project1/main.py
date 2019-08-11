@@ -4,30 +4,27 @@ from Parser import Parser
 from FCFS import FCFS
 from SJF import SJF
 from RR import RR
-from FileHandler import FileHandler
+from OutputHandler import OutputHandler
 from Utils import get_stats_str, verbose_mode
 
 
 def main():
     verbose = verbose_mode(sys.argv)
     parser = Parser()
-    output = FileHandler("results.txt")
+    output = OutputHandler("results.txt")
 
     processes = parser.parse_file(sys.argv[1])
 
     # Creates a FCFS scheduler
-    fcfs_p_copy = copy.deepcopy(processes)
-    fcfs = FCFS(fcfs_p_copy)
+    fcfs = FCFS(copy.deepcopy(processes))
     fcfs_stats = fcfs.run()
 
     # Creates a SJF Scheduler
-    sjf_processes_copy = copy.deepcopy(processes)
-    sjf = SJF(sjf_processes_copy)
+    sjf = SJF(copy.deepcopy(processes))
     sjf_stats = sjf.run()
 
     # Creates a RR Scheduler
-    rr_processes_copy = copy.deepcopy(processes)
-    rr = RR(rr_processes_copy)
+    rr = RR(copy.deepcopy(processes))
     rr_stats = rr.run()
 
     # If verbose. print to terminal
