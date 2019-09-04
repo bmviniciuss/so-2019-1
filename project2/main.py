@@ -5,6 +5,7 @@ from OutputHandler import OutputHandler
 from Utils import get_stats_str, verbose_mode
 from FIFO import FIFO
 from OTM import OTM
+from LRU import LRU
 
 
 def main():
@@ -22,11 +23,16 @@ def main():
     otm_stats = otm.run()
     otm_stats_str = get_stats_str("OTM", otm_stats)
 
-    output_handler.write_to_file(fifo_stats_str, otm_stats_str)
+    lru = LRU(copy.deepcopy(memory_blocks), copy.deepcopy(references))
+    lru_stats = lru.run()
+    lru_stats_str = get_stats_str("LRU", lru_stats)
+
+    output_handler.write_to_file(fifo_stats_str, otm_stats_str, lru_stats_str)
 
     if verbose:
         print(fifo_stats_str, end="")
-        print(otm_stats_str)
+        print(otm_stats_str, end="")
+        print(lru_stats_str)
 
 
 if __name__ == "__main__":
