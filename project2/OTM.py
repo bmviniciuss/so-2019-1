@@ -13,50 +13,54 @@ class OTM:
         cache_hit = 0
 
         access_index = 0
-        pages_index = 0
         atingidas = []
 
+        # all possible pages in references (no repetition)
         aux = list(dict.fromkeys(self.references))
 
         for access in references_copy:
 
             if access in self.pages:
+                # access in pages
                 cache_hit += 1
             else:
+                # acces not in pages
                 memory_errors += 1
 
+                # there is empty space in pages
                 if None in self.pages:
                     for i in range(len(self.pages)):
                         if self.pages[i] == None:
                             self.pages[i] = access
                             break
                 else:
-                    atingidas = []
-                    verificou_todas = 0
+                    # there is no empty space in pages
+                    checked = []
 
                     for e in self.references[access_index + 1:]:
-                        if verificou_todas < len(aux):
-                            if e not in atingidas:
-                                atingidas.append(e)
+                        if len(checked) < len(aux):
+                            if e not in checked:
+                                checked.append(e)
                         else:
                             break
 
-                    # adiciona elementos que n foram lidos (baixa preferencia)
-                    atingidas += list(set(aux) - set(atingidas))
+                    # add elements that was not read on the "future accesses" but maybe is on pages
+                    # append to the checked list the intersection of aux and checked
+                    checked += list(set(aux) - set(checked))
 
-                    elemento = None
+                    element = None
 
-                    for e in atingidas[::-1]:
+                    for e in checked[::-1]:
                         if e in self.pages:
-                            elemento = e
+                            element = e
                             break
 
-                    if elemento == None:
+                    if element == None:
                         self.pages[0] = access
                     else:
 
                         for i in range(len(self.pages)):
-                            if self.pages[i] == elemento:
+                            if self.pages[i] == element:
                                 self.pages[i] = access
                                 break
 
