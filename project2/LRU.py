@@ -15,13 +15,18 @@ class LRU:
         pages_index = 0
         for access in self.references:
             if access in self.pages:
+                # access in pages
                 cache_hit += 1
-                # botar inicio da pilha
+
+                # Put element at the top of Stack
                 index = self.pages.index(access)
                 self.pages.pop(index)
                 self.pages.insert(0, access)
             else:
+                # access not in pages, memory error
                 memory_errors += 1
+
+                # pop last element and insert new element at the top
                 self.pages.pop()
                 self.pages.insert(0, access)
 
