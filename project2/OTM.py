@@ -13,7 +13,7 @@ class OTM:
         cache_hit = 0
 
         access_index = 0
-        atingidas = []
+        checked = []
 
         # all possible pages in references (no repetition)
         aux = list(dict.fromkeys(self.references))

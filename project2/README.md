@@ -8,4 +8,4 @@ Implementar alguns algoritmos de substituição de páginas.
 
 - [x] FIFO (First in, First Out)
 - [x] OTM (Ótimo)
-- [ ] LRU (Menos Recentemente Usada)
+- [x] LRU (Menos Recentemente Usada)
